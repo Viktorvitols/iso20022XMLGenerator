@@ -8,6 +8,8 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+import static com.turiba.iso20022xmlgenerator.DBConnection.*;
+
 public class Main extends Application {
     @Override
     public void start(Stage stage) throws IOException {
@@ -21,6 +23,7 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
+        connect();
         launch();
     }
 }
