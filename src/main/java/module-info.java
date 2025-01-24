@@ -4,6 +4,7 @@ module com.turiba.iso20022xmlgenerator {
 
     requires org.controlsfx.controls;
     requires com.dlsc.formsfx;
+    requires java.sql;
 
     opens com.turiba.iso20022xmlgenerator to javafx.fxml;
     exports com.turiba.iso20022xmlgenerator;
