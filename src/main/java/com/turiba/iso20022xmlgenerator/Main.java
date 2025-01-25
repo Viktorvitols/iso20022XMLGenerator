@@ -8,7 +8,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-import static com.turiba.iso20022xmlgenerator.DBConnection.*;
+import static com.turiba.iso20022xmlgenerator.database.DBConnection.*;
 
 public class Main extends Application {
     @Override

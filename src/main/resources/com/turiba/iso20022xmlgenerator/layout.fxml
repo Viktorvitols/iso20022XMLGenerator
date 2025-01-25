@@ -6,9 +6,11 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 <?import javafx.scene.text.TextFlow?>
 
 <VBox alignment="CENTER" prefHeight="768.0" prefWidth="1366.0" spacing="20.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.turiba.iso20022xmlgenerator.ISOGenController">
@@ -21,65 +23,108 @@
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="726.0" prefWidth="456.0">
                <children>
                   <ChoiceBox fx:id="messageSelector" layoutX="207.0" layoutY="14.0" prefHeight="25.0" prefWidth="225.0" />
-                  <Label fx:id="senBankLabel" alignment="CENTER" layoutX="4.0" layoutY="94.0" prefHeight="17.0" prefWidth="202.0" text="Sender bank BIC" textAlignment="RIGHT">
+                  <Label fx:id="senBankLabel" alignment="CENTER" layoutX="4.0" layoutY="243.0" prefHeight="17.0" prefWidth="202.0" text="Instructing agent" textAlignment="RIGHT">
                      <opaqueInsets>
                         <Insets />
                      </opaqueInsets>
                   </Label>
-                  <TextField fx:id="senBankBicField" layoutX="210.0" layoutY="90.0" prefHeight="25.0" prefWidth="225.0" />
-                  <Label alignment="CENTER" layoutX="4.0" layoutY="133.0" prefHeight="17.0" prefWidth="202.0" text="Sender account" textAlignment="RIGHT">
+                  <TextField fx:id="instgAgtField" layoutX="190.0" layoutY="239.0" prefHeight="25.0" prefWidth="225.0" promptText="BICFIA1XXXX" text="HABALV22XXX" />
+                  <Label alignment="CENTER" layoutX="4.0" layoutY="309.0" prefHeight="17.0" prefWidth="202.0" text="Debitor name" textAlignment="RIGHT">
                      <opaqueInsets>
                         <Insets />
                      </opaqueInsets>
                   </Label>
-                  <TextField fx:id="filePathField" layoutX="143.0" layoutY="590.0" onAction="#onSaveToBtnClick" prefHeight="25.0" prefWidth="283.0" />
-                  <Label alignment="CENTER" layoutX="4.0" layoutY="172.0" prefHeight="17.0" prefWidth="202.0" text="Receiver bank BIC" textAlignment="RIGHT">
+                  <TextField fx:id="filePathField" layoutX="143.0" layoutY="603.0" onAction="#onSaveToBtnClick" prefHeight="25.0" prefWidth="283.0" promptText="C:\My_Swift_Templates" />
+                  <Label alignment="CENTER" layoutX="4.0" layoutY="342.0" prefHeight="17.0" prefWidth="202.0" text="Debitor account" textAlignment="RIGHT">
                      <opaqueInsets>
                         <Insets />
                      </opaqueInsets>
                   </Label>
-                  <TextField layoutX="210.0" layoutY="168.0" prefHeight="25.0" prefWidth="225.0" />
-                  <Label alignment="CENTER" layoutX="4.0" layoutY="214.0" prefHeight="17.0" prefWidth="202.0" text="Receiver account" textAlignment="RIGHT">
+                  <TextField fx:id="dbtrAcctField" layoutX="190.0" layoutY="338.0" prefHeight="25.0" prefWidth="225.0" promptText="LV00RTMB0000000000000" />
+                  <Label alignment="CENTER" layoutX="4.0" layoutY="275.0" prefHeight="17.0" prefWidth="202.0" text="Instructed agent" textAlignment="RIGHT">
                      <opaqueInsets>
                         <Insets />
                      </opaqueInsets>
                   </Label>
-                  <TextField layoutX="210.0" layoutY="210.0" prefHeight="25.0" prefWidth="225.0" />
-                  <Label alignment="CENTER" layoutX="5.0" layoutY="254.0" prefHeight="17.0" prefWidth="202.0" text="Sender name" textAlignment="RIGHT">
+                  <TextField fx:id="instdAgtField" layoutX="190.0" layoutY="271.0" prefHeight="25.0" prefWidth="225.0" promptText="BICFIA1XXXX" text="RTMBLV2XXXX" />
+                  <Label alignment="CENTER" layoutX="5.0" layoutY="406.0" prefHeight="17.0" prefWidth="202.0" text="Creditor agent" textAlignment="RIGHT">
                      <opaqueInsets>
                         <Insets />
                      </opaqueInsets>
                   </Label>
-                  <TextField layoutX="210.0" layoutY="250.0" prefHeight="25.0" prefWidth="225.0" />
-                  <Label alignment="CENTER" layoutX="5.0" layoutY="293.0" prefHeight="17.0" prefWidth="202.0" text="Receiver name" textAlignment="RIGHT">
+                  <TextField fx:id="cdtrAgtField" layoutX="190.0" layoutY="402.0" prefHeight="25.0" prefWidth="225.0" promptText="BICFIA1XXXX" text="RTMBLV2XXXX" />
+                  <Label alignment="CENTER" layoutX="5.0" layoutY="469.0" prefHeight="17.0" prefWidth="202.0" text="Creditor account" textAlignment="RIGHT">
                      <opaqueInsets>
                         <Insets />
                      </opaqueInsets>
                   </Label>
-                  <TextField layoutX="210.0" layoutY="289.0" prefHeight="25.0" prefWidth="225.0" />
-                  <Label alignment="CENTER" layoutX="5.0" layoutY="332.0" prefHeight="17.0" prefWidth="202.0" text="Amount" textAlignment="RIGHT">
+                  <TextField fx:id="IntrBkSttlmCcyAttr" layoutX="371.0" layoutY="170.0" prefHeight="25.0" prefWidth="63.0" promptText="EUR" text="EUR" />
+                  <Label alignment="CENTER" layoutX="5.0" layoutY="174.0" prefHeight="17.0" prefWidth="101.0" text="Amount" textAlignment="RIGHT">
                      <opaqueInsets>
                         <Insets />
                      </opaqueInsets>
                   </Label>
-                  <TextField layoutX="210.0" layoutY="328.0" prefHeight="25.0" prefWidth="225.0" />
-                  <Label alignment="CENTER" layoutX="5.0" layoutY="374.0" prefHeight="17.0" prefWidth="202.0" text="Currency" textAlignment="RIGHT">
+                  <TextField fx:id="intrBkSttlmAmtField" layoutX="109.0" layoutY="170.0" prefHeight="25.0" prefWidth="159.0" promptText="0.00" />
+                  <Label alignment="CENTER" layoutX="293.0" layoutY="173.0" prefHeight="17.0" prefWidth="75.0" text="Currency" textAlignment="RIGHT">
                      <opaqueInsets>
                         <Insets />
                      </opaqueInsets>
                   </Label>
-                  <TextField layoutX="210.0" layoutY="370.0" prefHeight="25.0" prefWidth="225.0" />
+                  <TextField fx:id="cdtrAccField" layoutX="190.0" layoutY="466.0" prefHeight="25.0" prefWidth="225.0" promptText="LV00RTMB0000000000000" />
                   <Button fx:id="genXML" layoutX="153.0" layoutY="658.0" mnemonicParsing="false" onAction="#onGenXmlButtonClick" prefHeight="39.0" prefWidth="114.0" text="Generate XML" />
                   <Label alignment="CENTER" layoutY="18.0" prefHeight="17.0" prefWidth="202.0" text="ISO Message Type" />
-                  <Button fx:id="saveToBtn" layoutX="23.0" layoutY="590.0" mnemonicParsing="false" onAction="#onSaveToBtnClick" prefHeight="25.0" prefWidth="101.0" text="Save to ..." />
-                  <Label alignment="CENTER" layoutX="25.0" layoutY="555.0" prefHeight="17.0" prefWidth="398.0" text="Selected directory:" />
-                  <TextField fx:id="senBankBicField1" layoutX="210.0" layoutY="129.0" prefHeight="25.0" prefWidth="225.0" />
-                  <Label alignment="CENTER" layoutX="6.0" layoutY="416.0" prefHeight="17.0" prefWidth="202.0" text="Payment details" textAlignment="RIGHT">
+                  <Button fx:id="saveToBtn" layoutX="23.0" layoutY="603.0" mnemonicParsing="false" onAction="#onSaveToBtnClick" prefHeight="25.0" prefWidth="101.0" text="Save to ..." />
+                  <Label layoutX="25.0" layoutY="568.0" prefHeight="17.0" prefWidth="398.0" text="Selected directory:">
+                     <font>
+                        <Font name="System Italic" size="14.0" />
+                     </font></Label>
+                  <TextField fx:id="dbtrNmField" layoutX="190.0" layoutY="305.0" prefHeight="25.0" prefWidth="225.0" promptText="Debitor Name" text="Debitor Name" />
+                  <Label alignment="CENTER" layoutX="6.0" layoutY="502.0" prefHeight="17.0" prefWidth="202.0" text="Remittance information" textAlignment="RIGHT">
                      <opaqueInsets>
                         <Insets />
                      </opaqueInsets>
                   </Label>
-                  <TextField layoutX="211.0" layoutY="412.0" prefHeight="25.0" prefWidth="225.0" />
+                  <Label fx:id="senBankLabel1" alignment="CENTER" layoutX="3.0" layoutY="79.0" prefHeight="17.0" prefWidth="202.0" text="From" textAlignment="RIGHT">
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                  </Label>
+                  <TextField fx:id="fromField" layoutX="209.0" layoutY="75.0" prefHeight="25.0" prefWidth="225.0" promptText="BICFIA1XXXX" text="HABALV22XXX" />
+                  <Label alignment="CENTER" layoutX="3.0" layoutY="118.0" prefHeight="17.0" prefWidth="202.0" text="To" textAlignment="RIGHT">
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                  </Label>
+                  <TextField fx:id="toField" layoutX="209.0" layoutY="114.0" prefHeight="25.0" prefWidth="225.0" promptText="BICFIA1XXXX" text="RTMBLV2XXXX" />
+                  <Label layoutX="7.0" layoutY="52.0" prefHeight="17.0" prefWidth="434.0" text="Application header">
+                     <font>
+                        <Font name="System Italic" size="14.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="8.0" layoutY="145.0" prefHeight="17.0" prefWidth="434.0" text="Document">
+                     <font>
+                        <Font name="System Italic" size="14.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="senBankLabel2" alignment="CENTER" layoutX="3.0" layoutY="373.0" prefHeight="17.0" prefWidth="202.0" text="Debitor agent" textAlignment="RIGHT">
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                  </Label>
+                  <TextField fx:id="dbtrAgtField" layoutX="190.0" layoutY="369.0" prefHeight="25.0" prefWidth="225.0" promptText="BICFIA1XXXX" text="HABALV22XXX" />
+                  <Label alignment="CENTER" layoutX="5.0" layoutY="438.0" prefHeight="17.0" prefWidth="202.0" text="Creditor name" textAlignment="RIGHT">
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                  </Label>
+                  <TextField fx:id="cdtrNmField" layoutX="190.0" layoutY="434.0" prefHeight="25.0" prefWidth="225.0" promptText="Creditor Name" text="Creditor Name" />
+                  <Label alignment="CENTER" layoutX="4.0" layoutY="207.0" prefHeight="17.0" prefWidth="101.0" text="Settlement date" textAlignment="RIGHT">
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                  </Label>
+                  <TextField fx:id="intrBkSttlmDtField" layoutX="108.0" layoutY="203.0" prefHeight="25.0" prefWidth="159.0" promptText="YYYY-MM-DD" />
+                  <TextArea fx:id="rmtInfField" layoutX="190.0" layoutY="501.0" prefHeight="57.0" prefWidth="225.0" promptText="Payment details" text="Payment details" />
                </children>
             </AnchorPane>
           <AnchorPane>
@@ -88,7 +133,7 @@
                     <content>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0">
                            <children>
-                              <TextFlow layoutX="14.0" layoutY="14.0" prefHeight="724.0" prefWidth="870.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                              <TextFlow layoutX="14.0" layoutY="14.0" prefHeight="724.0" prefWidth="870.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" fx:id="xmlPreviewArea" />
                            </children></AnchorPane>
                     </content>
                   </ScrollPane>
