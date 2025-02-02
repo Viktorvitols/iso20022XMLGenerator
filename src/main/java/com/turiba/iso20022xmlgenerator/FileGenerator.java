@@ -15,12 +15,13 @@ public class FileGenerator {
         return time.format(DateTimeFormatter.ofPattern("H-m-s-n"));
     }
 
-    public void generateXmlFile(String xml, String messageName, String path) {
+
+    public void generateXmlFile(String xml, String templateName, String path) {
         if ("".equals(path)) {
             System.out.println("No path provided");
             return;
         }
-        String fileName = messageName + "_" + generateFilenameSalt() + ".xml";
+        String fileName = templateName + "_" + generateFilenameSalt() + ".xml";
         String fullPath = Paths.get(path, fileName).toString();
 
         try {

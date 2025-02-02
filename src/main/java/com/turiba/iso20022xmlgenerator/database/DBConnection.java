@@ -18,25 +18,10 @@ public class DBConnection {
         return conn;
     }
 
-    public static void createTable() {
-        String sql = "CREATE TABLE IF NOT EXISTS XMLTEMPLATES (\n"
-                + " id INTEGER PRIMARY KEY AUTOINCREMENT,\n"
-                + " messageType TEXT NOT NULL,\n"
-                + " xmlTemplate TEXT NOT NULL;";
-
-        try (Connection conn = DriverManager.getConnection(URL);
-             Statement statement = conn.createStatement()) {
-            statement.execute(sql);
-            System.out.println("XMLTEMPLATES table is created.");
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-    public static String getXmlTemplate(String name) {
+    public static String getXmlTemplateByName(String templateName) {
 
         String template = null;
-        String sql = "SELECT xmlTemplate from XMLTEMPLATES WHERE templateName = " + name;
+        String sql = "SELECT TEMPLATE_NAME from XMLTEMPLATES WHERE TEMPLATE_NAME = " + templateName;
 
         try (Connection conn = DriverManager.getConnection(URL);
              PreparedStatement statement = conn.prepareStatement(sql);
@@ -57,7 +42,7 @@ public class DBConnection {
         String envelope = null;
         String header = null;
         String document = null;
-        String sql = "SELECT * from XSDSCHEMA WHERE messageType = " + mesType;
+        String sql = "SELECT * from XSDSCHEMA WHERE FOR_MESSAGE = " + mesType;
 
         try (Connection conn = DriverManager.getConnection(URL);
              PreparedStatement statement = conn.prepareStatement(sql);
@@ -75,9 +60,9 @@ public class DBConnection {
     }
 
 
-    public static List<String> getMessageTypes() {
+    public static List<String> getTemplateNames() {
         List<String> messageTypes = new ArrayList<>();;
-        String sql = "SELECT messageType FROM XMLTEMPLATES;";
+        String sql = "SELECT TEMPLATE_NAME FROM XMLTEMPLATE;";
         try (Connection conn = DriverManager.getConnection(URL);
              PreparedStatement statement = conn.prepareStatement(sql);
              ResultSet rs = statement.executeQuery()) {
