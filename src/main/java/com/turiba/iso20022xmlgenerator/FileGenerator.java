@@ -5,23 +5,17 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Paths;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 
 public class FileGenerator {
 
-    private String generateFilenameSalt() {
-        LocalTime time = LocalTime.now();
-        return time.format(DateTimeFormatter.ofPattern("H-m-s-n"));
-    }
-
+    BaseFunc bf = new BaseFunc();
 
     public void generateXmlFile(String xml, String templateName, String path) {
         if ("".equals(path)) {
             System.out.println("No path provided");
             return;
         }
-        String fileName = templateName + "_" + generateFilenameSalt() + ".xml";
+        String fileName = templateName + "_" + bf.generateUniqueString() + ".xml";
         String fullPath = Paths.get(path, fileName).toString();
 
         try {

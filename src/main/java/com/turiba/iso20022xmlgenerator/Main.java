@@ -18,11 +18,11 @@ public class Main extends Application {
         stage.setTitle("ISOGen 0.2");
         Image icon = new Image("iso.png");
 
-        // fill in the comboBox
+        /* TODO fill in the comboBox */
 
-        //preselect first template
+        /* TODO preselect first template */
 
-        //fill in all fields from a template
+        /* TODO fill in all fields from a template */
 
 
         stage.getIcons().add(icon);

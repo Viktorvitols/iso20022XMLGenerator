@@ -15,7 +15,7 @@ import org.xml.sax.SAXException;
 
 public class XSDValidator {
 
-    public static boolean validateXml(String xml, List<String> xsdSchemas) {
+    public boolean validateXml(String xml, List<String> xsdSchemas) {
         try {
             SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 
@@ -45,6 +45,31 @@ public class XSDValidator {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public String getMessageFormat(String message) {
+        try {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            factory.setNamespaceAware(true);
+            DocumentBuilder builder = factory.newDocumentBuilder();
+
+            Document doc = builder.parse(new InputSource(new StringReader(message)));
+
+            String namespace = doc.getDocumentElement().getLastChild().getPreviousSibling().getNamespaceURI();
+            String namespace2 = doc.getDocumentElement().getFirstChild().getNamespaceURI();
+
+            if ("urn:iso:std:iso:20022:tech:xsd:pacs.008.001.08".equals(namespace)) {
+                return "pacs.008.001.08";
+            } else if ("urn:iso:std:iso:20022:tech:xsd:pacs.009.001.08".equals(namespace)) {
+                return "pacs.009.001.08";
+            } else {
+                return null;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
 }

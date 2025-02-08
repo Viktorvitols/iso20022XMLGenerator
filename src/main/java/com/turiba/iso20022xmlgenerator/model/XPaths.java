@@ -9,13 +9,10 @@ public class XPaths {
     public static final String XCreDtTmField = "//GrpHdr/CreDtTm";
     public static final String XInstrIdField = "//CdtTrfTxInf/PmtId/InstrId";
     public static final String XEndToEndIdField = "//CdtTrfTxInf/PmtId/EndToEndId";
+    public static final String XUETRField = "//CdtTrfTxInf/PmtId/UETR";
     public static final String XIntrBkSttlmAmtField = "//CdtTrfTxInf/IntrBkSttlmAmt";
     public static final String XIntrBkSttlmCcyAttr = "//CdtTrfTxInf/IntrBkSttlmAmt/@Ccy";
     public static final String XIntrBkSttlmDtField = "//CdtTrfTxInf/IntrBkSttlmDt";
-    public static final String XChrgBrField = "//CdtTrfTxInf/ChrgBr";
-    public static final String XChrgAmtField = "//CdtTrfTxInf/ChrgsInf/Amt";
-    public static final String XChrgCcyAttr = "//CdtTrfTxInf/ChrgsInf/Amt/@Ccy";
-    public static final String XChrgAgtField = "//CdtTrfTxInf/ChrgsInf/Agt/FinInstnId/BICFI";
     public static final String XInstgAgtField = "//CdtTrfTxInf/InstgAgt/FinInstnId/BICFI";
     public static final String XInstdAgtField = "//CdtTrfTxInf/InstdAgt/FinInstnId/BICFI";
     public static final String XDbtrAcctField = "//CdtTrfTxInf/DbtrAcct/Id/Othr/Id";

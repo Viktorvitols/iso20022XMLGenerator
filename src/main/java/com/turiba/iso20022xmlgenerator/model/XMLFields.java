@@ -3,13 +3,10 @@ package com.turiba.iso20022xmlgenerator.model;
 public class XMLFields {
     public static String fromField;
     public static String toField;
-    public static String EndToEndIdField;
+    public static String endToEndIdField;
     public static String intrBkSttlmAmtField;
-    public static String IntrBkSttlmCcyAttr;
+    public static String intrBkSttlmCcyAttr;
     public static String intrBkSttlmDtField;
-    public static String ChrgBrField;
-    public static String ChrgAmtField;
-    public static String ChrgAgtField;
     public static String instdAgtField;
     public static String instgAgtField;
     public static String dbtrAcctField;
@@ -30,15 +27,15 @@ public class XMLFields {
     public static String dbtrBicField;
 
     public static void setFromField(String fromField) {
-        XMLFields.fromField = fromField;
+        XMLFields.fromField = fromField.toUpperCase();
     }
 
     public static void setToField(String toField) {
-        XMLFields.toField = toField;
+        XMLFields.toField = toField.toUpperCase();
     }
 
     public static void setEndToEndIdField(String endToEndIdField) {
-        EndToEndIdField = endToEndIdField;
+        XMLFields.endToEndIdField = endToEndIdField;
     }
 
     public static void setIntrBkSttlmAmtField(String intrBkSttlmAmtField) {
@@ -46,39 +43,27 @@ public class XMLFields {
     }
 
     public static void setIntrBkSttlmCcyAttr(String intrBkSttlmCcyAttr) {
-        IntrBkSttlmCcyAttr = intrBkSttlmCcyAttr;
+        XMLFields.intrBkSttlmCcyAttr = intrBkSttlmCcyAttr.toUpperCase();
     }
 
     public static void setIntrBkSttlmDtField(String intrBkSttlmDtField) {
         XMLFields.intrBkSttlmDtField = intrBkSttlmDtField;
     }
 
-    public static void setChrgBrField(String chrgBrField) {
-        ChrgBrField = chrgBrField;
-    }
-
-    public static void setChrgAmtField(String chrgAmtField) {
-        ChrgAmtField = chrgAmtField;
-    }
-
-    public static void setChrgAgtField(String chrgAgtField) {
-        ChrgAgtField = chrgAgtField;
-    }
-
     public static void setInstdAgtField(String instdAgtField) {
-        XMLFields.instdAgtField = instdAgtField;
+        XMLFields.instdAgtField = instdAgtField.toUpperCase();
     }
 
     public static void setInstgAgtField(String instgAgtField) {
-        XMLFields.instgAgtField = instgAgtField;
+        XMLFields.instgAgtField = instgAgtField.toUpperCase();
     }
 
     public static void setDbtrAcctField(String dbtrAcctField) {
-        XMLFields.dbtrAcctField = dbtrAcctField;
+        XMLFields.dbtrAcctField = dbtrAcctField.toUpperCase();
     }
 
     public static void setDbtrNmField(String dbtrNmField) {
-        XMLFields.dbtrNmField = dbtrNmField;
+        XMLFields.dbtrNmField = dbtrNmField.toUpperCase();
     }
 
     public static void setDbtrStrtNmField(String dbtrStrtNmField) {
@@ -90,15 +75,15 @@ public class XMLFields {
     }
 
     public static void setDbtrCtryField(String dbtrCtryField) {
-        XMLFields.dbtrCtryField = dbtrCtryField;
+        XMLFields.dbtrCtryField = dbtrCtryField.toUpperCase();
     }
 
     public static void setDbtrAgtField(String dbtrAgtField) {
-        XMLFields.dbtrAgtField = dbtrAgtField;
+        XMLFields.dbtrAgtField = dbtrAgtField.toUpperCase();
     }
 
     public static void setCdtrAgtField(String cdtrAgtField) {
-        XMLFields.cdtrAgtField = cdtrAgtField;
+        XMLFields.cdtrAgtField = cdtrAgtField.toUpperCase();
     }
 
     public static void setCdtrNmField(String cdtrNmField) {
@@ -114,11 +99,11 @@ public class XMLFields {
     }
 
     public static void setCdtrCtryField(String cdtrCtryField) {
-        XMLFields.cdtrCtryField = cdtrCtryField;
+        XMLFields.cdtrCtryField = cdtrCtryField.toUpperCase();
     }
 
     public static void setCdtrAccField(String cdtrAccField) {
-        XMLFields.cdtrAccField = cdtrAccField;
+        XMLFields.cdtrAccField = cdtrAccField.toUpperCase();
     }
 
     public static void setRmtInfField(String rmtInfField) {
@@ -126,10 +111,10 @@ public class XMLFields {
     }
 
     public static void setCdtrBicField(String cdtrBicField) {
-        XMLFields.cdtrBicField = cdtrBicField;
+        XMLFields.cdtrBicField = cdtrBicField.toUpperCase();
     }
 
     public static void setDbtrBicField(String dbtrBicField) {
-        XMLFields.dbtrBicField = dbtrBicField;
+        XMLFields.dbtrBicField = dbtrBicField.toUpperCase();
     }
 }

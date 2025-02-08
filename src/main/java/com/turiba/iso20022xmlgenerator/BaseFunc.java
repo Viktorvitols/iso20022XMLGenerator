@@ -7,6 +7,6 @@ public class BaseFunc {
 
     public String generateUniqueString() {
         LocalTime time = LocalTime.now();
-        return time.format(DateTimeFormatter.ofPattern("H-m-s-n"));
+        return time.format(DateTimeFormatter.ofPattern("H-m-s-n")).substring(0,12);
     }
 }
