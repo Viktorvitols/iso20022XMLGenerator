@@ -2,6 +2,7 @@ package com.turiba.iso20022xmlgenerator;
 
 import com.turiba.iso20022xmlgenerator.database.DBConnection;
 import com.turiba.iso20022xmlgenerator.model.XMLFields;
+import com.turiba.iso20022xmlgenerator.model.XPaths;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -12,9 +13,16 @@ import javafx.scene.control.TextArea;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathFactory;
 import java.io.File;
 import java.io.IOException;
+import java.io.StringReader;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -39,7 +47,7 @@ public class ISOGenController implements Initializable {
     private TextField toField;
 
     @FXML
-    private TextField IntrBkSttlmCcyAttr;
+    private TextField intrBkSttlmCcyAttr;
 
     @FXML
     private TextField cdtrAccField;
@@ -112,8 +120,11 @@ public class ISOGenController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         messageSelector.getItems().addAll(messageFormats);
         messageSelector.setOnAction(this::getTemplateName);
-        messageSelector.setValue(messageFormats.get(0));
-
+        messageSelector.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                fillInFields(newValue);
+            }
+        });
         filePathField.setOnAction(this::getFilePath);
     }
 
@@ -126,12 +137,12 @@ public class ISOGenController implements Initializable {
         this.filePath = filePathField.getText();
     }
 
-    private void setupXmlObject() {
+    private void setupXmlObjectFromGui() {
         XMLFields.setFromField(fromField.getText());
         XMLFields.setToField(toField.getText());
         XMLFields.setEndToEndIdField(e2eidField.getText());
         XMLFields.setIntrBkSttlmAmtField(intrBkSttlmAmtField.getText());
-        XMLFields.setIntrBkSttlmCcyAttr(IntrBkSttlmCcyAttr.getText());
+        XMLFields.setIntrBkSttlmCcyAttr(intrBkSttlmCcyAttr.getText());
         XMLFields.setIntrBkSttlmDtField(intrBkSttlmDtField.getText());
         XMLFields.setInstdAgtField(instdAgtField.getText());
         XMLFields.setInstgAgtField(instgAgtField.getText());
@@ -150,21 +161,100 @@ public class ISOGenController implements Initializable {
         XMLFields.setRmtInfField(rmtInfField.getText());
     }
 
-    /* TODO fill in fields on template change */
-    public void fillInFields(String templateName) {
 
+    private void fillInFields(String templateName) {
+        BaseFunc bf = new BaseFunc();
+        String xmlContent = DBConnection.getXmlTemplateByName(templateName);
+        if (xmlContent != null) {
+            String from = getValueFromTemplate(xmlContent, XPaths.XFromField);
+            fromField.setText(from);
+
+            String to = getValueFromTemplate(xmlContent, XPaths.XToField);
+            toField.setText(to);
+
+            String e2e = getValueFromTemplate(xmlContent, XPaths.XEndToEndIdField);
+            e2eidField.setText(e2e);
+
+            String amt = getValueFromTemplate(xmlContent, XPaths.XIntrBkSttlmAmtField);
+            intrBkSttlmAmtField.setText(amt);
+
+            String ccy = getValueFromTemplate(xmlContent, XPaths.XIntrBkSttlmCcyAttr);
+            intrBkSttlmCcyAttr.setText(ccy);
+
+            intrBkSttlmDtField.setText(bf.today());
+
+            String instdAgt = getValueFromTemplate(xmlContent, XPaths.XInstdAgtField);
+            instdAgtField.setText(instdAgt);
+
+            String instgAgt = getValueFromTemplate(xmlContent, XPaths.XInstgAgtField);
+            instgAgtField.setText(instgAgt);
+
+            String dbtrAgt = getValueFromTemplate(xmlContent, XPaths.XDbtrAgtField);
+            dbtrAgtField.setText(dbtrAgt);
+
+            String cdtrAgt = getValueFromTemplate(xmlContent, XPaths.XCdtrAgtField);
+            cdtrAgtField.setText(cdtrAgt);
+
+            String dbtrAcc = getValueFromTemplate(xmlContent, XPaths.XDbtrAcctField);
+            dbtrAcctField.setText(dbtrAcc);
+
+            String dbtrNm = getValueFromTemplate(xmlContent, XPaths.XDbtrNmField);
+            dbtrNmField.setText(dbtrNm);
+
+            String cdtrAcc = getValueFromTemplate(xmlContent, XPaths.XCdtrAccField);
+            cdtrAccField.setText(cdtrAcc);
+
+            String cdtrNm = getValueFromTemplate(xmlContent, XPaths.XCdtrNmField);
+            cdtrNmField.setText(cdtrNm);
+
+            String dbtrStr = getValueFromTemplate(xmlContent, XPaths.XDbtrStrtNmField);
+            dbtrStrField.setText(dbtrStr);
+
+            String cdtrStr = getValueFromTemplate(xmlContent, XPaths.XCdtrStrtNmField);
+            cdtrStrField.setText(cdtrStr);
+
+            String dbtrCtry = getValueFromTemplate(xmlContent, XPaths.XDbtrCtryField);
+            dbtrCtryField.setText(dbtrCtry);
+
+            String dbtrTwn = getValueFromTemplate(xmlContent, XPaths.XDbtrTwnNmField);
+            dbtrTownField.setText(dbtrTwn);
+
+            String cdtrCtry = getValueFromTemplate(xmlContent, XPaths.XCdtrCtryField);
+            cdtrCtryField.setText(cdtrCtry);
+
+            String cdtrTwn = getValueFromTemplate(xmlContent, XPaths.XCdtrTwnNmField);
+            cdtrTownField.setText(cdtrTwn);
+
+            String details = getValueFromTemplate(xmlContent, XPaths.XRmtInfField);
+            rmtInfField.setText(details);
+        }
     }
 
+
+    private String getValueFromTemplate(String xmlTemplate, String fieldXPath) {
+        try {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            InputSource inputSource = new InputSource(new StringReader(xmlTemplate));
+            Document document = builder.parse(inputSource);
+            XPath xPath = XPathFactory.newInstance().newXPath();
+
+            return xPath.evaluate(fieldXPath, document);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
 
     @FXML
     protected void onGenXmlButtonClick() {
         this.filePath = filePathField.getText();
-        setupXmlObject();
+        setupXmlObjectFromGui();
         String generatedXml = xmlModifier.prepareXml(templateName);
 
-        /* TODO validate xml */
-
-        fileGenerator.generateXmlFile(generatedXml, templateName, filePath);
+        XSDValidator xsdValidator = new XSDValidator();
+        if (xsdValidator.validateXml(generatedXml))
+            fileGenerator.generateXmlFile(generatedXml, templateName, filePath);
     }
 
     @FXML
@@ -190,19 +280,22 @@ public class ISOGenController implements Initializable {
 
         File selectedFile = fileChooser.showOpenDialog(stage);
 
-        /* TODO Validate xml */
-
+        XSDValidator xsdValidator = new XSDValidator();
 
         if (selectedFile != null) {
             try {
                 String fileName = selectedFile.getName();
                 String xml = new String(Files.readAllBytes(Paths.get(selectedFile.getAbsolutePath())));
 
-                if (DBConnection.getXmlTemplateByName(fileName) == null) {
+
+                if (xsdValidator.validateXml(xml) &&
+                        DBConnection.getXmlTemplateByName(fileName) == null) {
+
                     DBConnection.saveNewTemplate(fileName, xml);
                     System.out.println("New template added");
                     updateTemplateList();
                     System.out.println("List updated");
+
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -215,6 +308,4 @@ public class ISOGenController implements Initializable {
         List<String> updatedMessageFormats = DBConnection.getTemplateNames();
         messageSelector.getItems().addAll(updatedMessageFormats);
     }
-
-
 }

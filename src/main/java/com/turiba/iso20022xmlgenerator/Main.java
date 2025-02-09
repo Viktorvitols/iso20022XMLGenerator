@@ -18,9 +18,6 @@ public class Main extends Application {
         stage.setTitle("ISOGen 0.2");
         Image icon = new Image("iso.png");
 
-
-        /* TODO fill in all fields from a template */
-
         stage.getIcons().add(icon);
         stage.setScene(scene);
         stage.show();

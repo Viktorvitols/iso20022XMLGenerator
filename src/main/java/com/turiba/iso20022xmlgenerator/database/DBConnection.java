@@ -1,13 +1,7 @@
 package com.turiba.iso20022xmlgenerator.database;
 
 import com.turiba.iso20022xmlgenerator.XSDValidator;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.xml.sax.InputSource;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.StringReader;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +39,7 @@ public class DBConnection {
     }
 
 
-    public static String getXsdForMesType(String mesType) {
+    private static String getXsdForMesType(String mesType) {
 
         String sql = "SELECT * from XSDSCHEMA WHERE FOR_MESSAGE = ?;";
 
@@ -62,11 +56,22 @@ public class DBConnection {
             }
 
         } catch (SQLException e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
         return null;
     }
 
+    public static String getAppHeaderXSD() {
+        return getXsdForMesType("head.001.001.02");
+    }
+
+    public static String getEnvelopeXSD() {
+        return getXsdForMesType("envelope");
+    }
+
+    public static String getDocumentXSD(String pacsType) {
+        return getXsdForMesType(pacsType);
+    }
 
     public static List<String> getTemplateNames() {
         List<String> messageTypes = new ArrayList<>();
@@ -110,6 +115,4 @@ public class DBConnection {
             throw new RuntimeException(ex);
         }
     }
-
-
 }
