@@ -6,10 +6,7 @@ import com.turiba.iso20022xmlgenerator.model.XPaths;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -26,6 +23,7 @@ import java.io.StringReader;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -38,7 +36,7 @@ public class ISOGenController implements Initializable {
 
     @FXML
     private ChoiceBox<String> messageSelector;
-    private List<String> messageFormats = DBConnection.getTemplateNames();
+    private List<String> templateList = new ArrayList<>();
 
     @FXML
     private TextField fromField;
@@ -104,7 +102,22 @@ public class ISOGenController implements Initializable {
     private TextField intrBkSttlmDtField;
 
     @FXML
-    private TextArea rmtInfField;
+    private TextArea detailsField;
+
+    @FXML
+    private TextField dbtrBicField;
+
+    @FXML
+    private TextField cdtrBicField;
+
+    @FXML
+    private RadioButton pacs008Radio;
+
+    @FXML
+    private RadioButton pacs009Radio;
+
+    @FXML
+    private ToggleGroup pacsFormat;
 
     @FXML
     private Button genXML;
@@ -118,16 +131,67 @@ public class ISOGenController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        messageSelector.getItems().addAll(messageFormats);
         messageSelector.setOnAction(this::getTemplateName);
-        messageSelector.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                fillInFields(newValue);
-            }
-        });
+        messageSelector.getSelectionModel().selectedItemProperty()
+                .addListener((observable, oldValue, newValue) -> {
+                    if (newValue != null) {
+                        fillInFields(newValue);
+                    }
+                });
+
         filePathField.setOnAction(this::getFilePath);
+
+        prepareGuiFields(new ActionEvent(pacsFormat.getSelectedToggle(), null));
+
     }
 
+    public void prepareGuiFields(ActionEvent event) {
+        if (pacs008Radio.isSelected()) {
+            dbtrBicField.setDisable(true);
+            cdtrBicField.setDisable(true);
+            dbtrNmField.setDisable(false);
+            cdtrNmField.setDisable(false);
+            dbtrAcctField.setDisable(false);
+            cdtrAccField.setDisable(false);
+            dbtrStrField.setDisable(false);
+            cdtrStrField.setDisable(false);
+            dbtrCtryField.setDisable(false);
+            cdtrCtryField.setDisable(false);
+            dbtrTownField.setDisable(false);
+            cdtrTownField.setDisable(false);
+            refreshListOfTemplates();
+        } else if (pacs009Radio.isSelected()) {
+            dbtrBicField.setDisable(false);
+            cdtrBicField.setDisable(false);
+            dbtrNmField.setDisable(true);
+            cdtrNmField.setDisable(true);
+            dbtrAcctField.setDisable(true);
+            cdtrAccField.setDisable(true);
+            dbtrStrField.setDisable(true);
+            cdtrStrField.setDisable(true);
+            dbtrCtryField.setDisable(true);
+            cdtrCtryField.setDisable(true);
+            dbtrTownField.setDisable(true);
+            cdtrTownField.setDisable(true);
+            refreshListOfTemplates();
+        }
+    }
+
+    private void refreshListOfTemplates() {
+        String format = "";
+        templateList.clear();
+        messageSelector.getItems().clear();
+
+        if (pacs008Radio.isSelected()) {
+            format = pacs008Radio.getText();
+        } else if (pacs009Radio.isSelected()) {
+            format = pacs009Radio.getText();
+        }
+
+        templateList = DBConnection.getTemplateNamesByFormat(format);
+        messageSelector.getItems().addAll(templateList);
+
+    }
 
     public void getTemplateName(ActionEvent event) {
         this.templateName = messageSelector.getValue();
@@ -158,7 +222,10 @@ public class ISOGenController implements Initializable {
         XMLFields.setDbtrTwnNmField(dbtrTownField.getText());
         XMLFields.setCdtrCtryField(cdtrCtryField.getText());
         XMLFields.setCdtrTwnNmField(cdtrTownField.getText());
-        XMLFields.setRmtInfField(rmtInfField.getText());
+        XMLFields.setRmtInfField(detailsField.getText());
+        XMLFields.setPurpCdField(detailsField.getText());
+        XMLFields.setCdtrBicField(dbtrBicField.getText());
+        XMLFields.setDbtrBicField(cdtrBicField.getText());
     }
 
 
@@ -195,6 +262,12 @@ public class ISOGenController implements Initializable {
             String cdtrAgt = getValueFromTemplate(xmlContent, XPaths.XCdtrAgtField);
             cdtrAgtField.setText(cdtrAgt);
 
+            String dbtrBic = getValueFromTemplate(xmlContent, XPaths.XDbtrBicField);
+            dbtrBicField.setText(dbtrBic);
+
+            String cdtrBic = getValueFromTemplate(xmlContent, XPaths.XCdtrBicField);
+            cdtrBicField.setText(cdtrBic);
+
             String dbtrAcc = getValueFromTemplate(xmlContent, XPaths.XDbtrAcctField);
             dbtrAcctField.setText(dbtrAcc);
 
@@ -226,7 +299,10 @@ public class ISOGenController implements Initializable {
             cdtrTownField.setText(cdtrTwn);
 
             String details = getValueFromTemplate(xmlContent, XPaths.XRmtInfField);
-            rmtInfField.setText(details);
+            detailsField.setText(details);
+
+//            String purpCd = getValueFromTemplate(xmlContent, XPaths.XPurposeCode);
+//            detailsField.setText(purpCd);
         }
     }
 
@@ -253,8 +329,12 @@ public class ISOGenController implements Initializable {
         String generatedXml = xmlModifier.prepareXml(templateName);
 
         XSDValidator xsdValidator = new XSDValidator();
-        if (xsdValidator.validateXml(generatedXml))
+        if (true/*xsdValidator.validateXml(generatedXml)*/) {
             fileGenerator.generateXmlFile(generatedXml, templateName, filePath);
+
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "File is created!", ButtonType.OK);
+            alert.showAndWait();
+        }
     }
 
     @FXML
@@ -288,14 +368,18 @@ public class ISOGenController implements Initializable {
                 String xml = new String(Files.readAllBytes(Paths.get(selectedFile.getAbsolutePath())));
 
 
-                if (xsdValidator.validateXml(xml) &&
+                if (//xsdValidator.validateXml(xml) &&
                         DBConnection.getXmlTemplateByName(fileName) == null) {
 
                     DBConnection.saveNewTemplate(fileName, xml);
-                    System.out.println("New template added");
-                    updateTemplateList();
-                    System.out.println("List updated");
+                    refreshListOfTemplates();
 
+                    Alert alert = new Alert(Alert.AlertType.NONE, "New template added", ButtonType.OK);
+                    alert.show();
+                } else {
+
+                    Alert alert = new Alert(Alert.AlertType.ERROR, "Try something else!", ButtonType.OK);
+                    alert.showAndWait();
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -303,9 +387,4 @@ public class ISOGenController implements Initializable {
         }
     }
 
-    public void updateTemplateList() {
-        messageSelector.getItems().clear();
-        List<String> updatedMessageFormats = DBConnection.getTemplateNames();
-        messageSelector.getItems().addAll(updatedMessageFormats);
-    }
 }

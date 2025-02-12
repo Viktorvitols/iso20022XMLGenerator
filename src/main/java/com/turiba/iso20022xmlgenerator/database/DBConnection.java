@@ -73,14 +73,15 @@ public class DBConnection {
         return getXsdForMesType(pacsType);
     }
 
-    public static List<String> getTemplateNames() {
+    public static List<String> getTemplateNamesByFormat(String pacsFormat) {
         List<String> messageTypes = new ArrayList<>();
 
-        String sql = "SELECT TEMPLATE_NAME FROM XMLTEMPLATE;";
+        String sql = "SELECT TEMPLATE_NAME FROM XMLTEMPLATE WHERE MESSAGE_TYPE = ?;";
         try (Connection conn = DriverManager.getConnection(URL);
-             PreparedStatement statement = conn.prepareStatement(sql);
-             ResultSet rs = statement.executeQuery()) {
+             PreparedStatement statement = conn.prepareStatement(sql)) {
 
+            statement.setString(1, pacsFormat);
+            ResultSet rs = statement.executeQuery();
             while (rs.next()) {
                 messageTypes.add(rs.getString("TEMPLATE_NAME"));
             }

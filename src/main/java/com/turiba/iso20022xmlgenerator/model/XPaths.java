@@ -29,8 +29,8 @@ public class XPaths {
     public static final String XCdtrAccField = "//CdtTrfTxInf/CdtrAcct/Id/Othr/Id";
     public static final String XRmtInfField = "//CdtTrfTxInf/RmtInf/Ustrd";
 
-    public static final String XDbtrField = "//CdtTrfTxInf/Dbtr/FinInstnId/BICFI";
-    public static final String XCdtrField = "//CdtTrfTxInf/Cdtr/FinInstnId/BICFI";
-
+    public static final String XDbtrBicField = "//CdtTrfTxInf/Dbtr/FinInstnId/BICFI";
+    public static final String XCdtrBicField = "//CdtTrfTxInf/Cdtr/FinInstnId/BICFI";
+    public static final String XPurposeCode = "//CdtTrfTxInf/Purp/Cd";
 
 }

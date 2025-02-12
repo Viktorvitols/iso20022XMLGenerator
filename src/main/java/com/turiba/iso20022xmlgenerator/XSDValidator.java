@@ -1,10 +1,11 @@
 package com.turiba.iso20022xmlgenerator;
 
+import com.turiba.iso20022xmlgenerator.database.DBConnection;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import javax.xml.XMLConstants;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import java.io.StringReader;
 import java.io.ByteArrayInputStream;
@@ -14,10 +15,10 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.validation.Validator;
 import javax.xml.transform.dom.DOMSource;
-import com.turiba.iso20022xmlgenerator.database.DBConnection;
-import org.w3c.dom.Document;
+
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import org.w3c.dom.Document;
 
 public class XSDValidator {
 
@@ -38,33 +39,28 @@ public class XSDValidator {
                 return false;
             }
 
-            InputStream inputStreamEnv = new ByteArrayInputStream(envelopeXSD.getBytes(StandardCharsets.UTF_8));
-            InputStream inputStreamHead = new ByteArrayInputStream(appHeaderXSD.getBytes(StandardCharsets.UTF_8));
-            InputStream inputStreamPacs = new ByteArrayInputStream(documentXSD.getBytes(StandardCharsets.UTF_8));
-
-            Schema schemaHead = schemaFactory.newSchema(new StreamSource(inputStreamHead));
-            Schema schemaPacs = schemaFactory.newSchema(new StreamSource(inputStreamPacs));
-            Schema schemaEnv = schemaFactory.newSchema(new StreamSource(inputStreamEnv));
-
-            /* TODO Fix envelope schema*/
+            Schema schema = schemaFactory.newSchema(new Source[]{
+                    new StreamSource(new StringReader(envelopeXSD)),
+                    new StreamSource(new StringReader(appHeaderXSD)),
+                    new StreamSource(new StringReader(documentXSD))
+            });
 
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             factory.setNamespaceAware(true);
-            Document document = factory.newDocumentBuilder().parse(new ByteArrayInputStream(xml.getBytes()));
+            Document document = factory.newDocumentBuilder().parse(new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)));
 
-            Validator validator = schemaEnv.newValidator();
+            Validator validator = schema.newValidator();
             validator.validate(new DOMSource(document));
-            validator = schemaHead.newValidator();
-            validator.validate(new DOMSource(document.getElementsByTagName("head:AppHdr").item(0)));
-            validator = schemaPacs.newValidator();
-            validator.validate(new DOMSource(document.getElementsByTagName("Document").item(0)));
 
+            System.out.println("XML is valid!");
             return true;
 
         } catch (SAXException | IOException | ParserConfigurationException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+            return false;
         }
     }
+
 
     public String getMessageFormat(String message) {
         try {

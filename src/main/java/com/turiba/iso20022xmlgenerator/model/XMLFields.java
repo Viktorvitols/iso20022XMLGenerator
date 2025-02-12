@@ -25,6 +25,7 @@ public class XMLFields {
 
     public static String cdtrBicField;
     public static String dbtrBicField;
+    public static String purpCdField;
 
     public static void setFromField(String fromField) {
         XMLFields.fromField = fromField.toUpperCase();
@@ -106,8 +107,11 @@ public class XMLFields {
         XMLFields.cdtrAccField = cdtrAccField.toUpperCase();
     }
 
-    public static void setRmtInfField(String rmtInfField) {
-        XMLFields.rmtInfField = rmtInfField;
+    public static void setRmtInfField(String details) {
+        XMLFields.rmtInfField = details.trim();
+    }
+    public static void setPurpCdField(String details) {
+        XMLFields.purpCdField = details.trim();
     }
 
     public static void setCdtrBicField(String cdtrBicField) {
@@ -117,4 +121,5 @@ public class XMLFields {
     public static void setDbtrBicField(String dbtrBicField) {
         XMLFields.dbtrBicField = dbtrBicField.toUpperCase();
     }
+
 }

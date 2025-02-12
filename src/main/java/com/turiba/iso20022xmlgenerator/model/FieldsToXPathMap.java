@@ -47,6 +47,9 @@ public class FieldsToXPathMap {
         modificationMap.put(XPaths.XCdtrCtryField, XMLFields.cdtrCtryField);
         modificationMap.put(XPaths.XCdtrAccField, XMLFields.cdtrAccField);
         modificationMap.put(XPaths.XRmtInfField, XMLFields.rmtInfField);
+        modificationMap.put(XPaths.XDbtrBicField, XMLFields.dbtrBicField);
+        modificationMap.put(XPaths.XCdtrBicField, XMLFields.cdtrBicField);
+        modificationMap.put(XPaths.XPurposeCode, XMLFields.purpCdField);
 
     }
 }
