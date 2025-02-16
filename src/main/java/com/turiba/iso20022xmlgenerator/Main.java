@@ -15,7 +15,7 @@ public class Main extends Application {
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("layout.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 660, 925);
-        stage.setTitle("ISOGen 0.2");
+        stage.setTitle("ISOGen 1.0");
         Image icon = new Image("iso.png");
 
         stage.getIcons().add(icon);

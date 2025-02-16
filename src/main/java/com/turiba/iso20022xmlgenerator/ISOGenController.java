@@ -3,13 +3,16 @@ package com.turiba.iso20022xmlgenerator;
 import com.turiba.iso20022xmlgenerator.database.DBConnection;
 import com.turiba.iso20022xmlgenerator.model.XMLFields;
 import com.turiba.iso20022xmlgenerator.model.XPaths;
-import javafx.event.ActionEvent;
+
 import javafx.fxml.FXML;
+import javafx.animation.PauseTransition;
+import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
@@ -31,7 +34,9 @@ public class ISOGenController implements Initializable {
 
     FileGenerator fileGenerator = new FileGenerator();
     XMLModifier xmlModifier = new XMLModifier();
-    private String templateName;
+    BaseFunc bf = new BaseFunc();
+
+    private String templateName = "";
     private String filePath = "";
 
     @FXML
@@ -66,7 +71,7 @@ public class ISOGenController implements Initializable {
     private TextField cdtrTownField;
 
     @FXML
-    private TextField dbtrAcctField;
+    private TextField dbtrAccField;
 
     @FXML
     private TextField dbtrAgtField;
@@ -120,7 +125,10 @@ public class ISOGenController implements Initializable {
     private ToggleGroup pacsFormat;
 
     @FXML
-    private Button genXML;
+    private Label doneLbl;
+
+    @FXML
+    public Button genXML;
 
     @FXML
     private Button newTemplateBtn;
@@ -128,20 +136,40 @@ public class ISOGenController implements Initializable {
     @FXML
     private Button saveToBtn;
 
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         messageSelector.setOnAction(this::getTemplateName);
         messageSelector.getSelectionModel().selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> {
+
                     if (newValue != null) {
                         fillInFields(newValue);
                     }
                 });
 
+        manageDeleteBtn();
         filePathField.setOnAction(this::getFilePath);
-
         prepareGuiFields(new ActionEvent(pacsFormat.getSelectedToggle(), null));
+    }
+
+    private void manageDeleteBtn() {
+        ContextMenu contextMenu = new ContextMenu();
+        MenuItem deleteItem = new MenuItem("Delete");
+        deleteItem.setOnAction(event -> {
+            String template = messageSelector.getValue();
+
+            if (template != null) {
+                if (DBConnection.deleteTemplate(templateName)) {
+                    messageSelector.getItems().remove(template);
+                    refreshListOfTemplates();
+                    messageSelector.setValue(null);
+                } else {
+                    bf.showCustomDialogMessage("Error", "Could not delete the file", messageSelector);
+                }
+            }
+        });
+        contextMenu.getItems().add(deleteItem);
+        messageSelector.setContextMenu(contextMenu);
 
     }
 
@@ -151,7 +179,7 @@ public class ISOGenController implements Initializable {
             cdtrBicField.setDisable(true);
             dbtrNmField.setDisable(false);
             cdtrNmField.setDisable(false);
-            dbtrAcctField.setDisable(false);
+            dbtrAccField.setDisable(false);
             cdtrAccField.setDisable(false);
             dbtrStrField.setDisable(false);
             cdtrStrField.setDisable(false);
@@ -159,13 +187,14 @@ public class ISOGenController implements Initializable {
             cdtrCtryField.setDisable(false);
             dbtrTownField.setDisable(false);
             cdtrTownField.setDisable(false);
+            detailsField.setDisable(false);
             refreshListOfTemplates();
         } else if (pacs009Radio.isSelected()) {
             dbtrBicField.setDisable(false);
             cdtrBicField.setDisable(false);
             dbtrNmField.setDisable(true);
             cdtrNmField.setDisable(true);
-            dbtrAcctField.setDisable(true);
+            dbtrAccField.setDisable(true);
             cdtrAccField.setDisable(true);
             dbtrStrField.setDisable(true);
             cdtrStrField.setDisable(true);
@@ -173,6 +202,7 @@ public class ISOGenController implements Initializable {
             cdtrCtryField.setDisable(true);
             dbtrTownField.setDisable(true);
             cdtrTownField.setDisable(true);
+            detailsField.setDisable(true);
             refreshListOfTemplates();
         }
     }
@@ -193,11 +223,11 @@ public class ISOGenController implements Initializable {
 
     }
 
-    public void getTemplateName(ActionEvent event) {
+    private void getTemplateName(ActionEvent event) {
         this.templateName = messageSelector.getValue();
     }
 
-    public void getFilePath(ActionEvent event) {
+    private void getFilePath(ActionEvent event) {
         this.filePath = filePathField.getText();
     }
 
@@ -212,9 +242,11 @@ public class ISOGenController implements Initializable {
         XMLFields.setInstgAgtField(instgAgtField.getText());
         XMLFields.setDbtrAgtField(dbtrAgtField.getText());
         XMLFields.setCdtrAgtField(cdtrAgtField.getText());
-        XMLFields.setDbtrAcctField(dbtrAcctField.getText());
+        XMLFields.setDbtrAccField(dbtrAccField.getText());
+        XMLFields.setDbtrAccIbanField(dbtrAccField.getText());
         XMLFields.setDbtrNmField(dbtrNmField.getText());
         XMLFields.setCdtrAccField(cdtrAccField.getText());
+        XMLFields.setCdtrAccIbanField(cdtrAccField.getText());
         XMLFields.setCdtrNmField(cdtrNmField.getText());
         XMLFields.setDbtrStrtNmField(dbtrStrField.getText());
         XMLFields.setCdtrStrtNmField(cdtrStrField.getText());
@@ -223,14 +255,12 @@ public class ISOGenController implements Initializable {
         XMLFields.setCdtrCtryField(cdtrCtryField.getText());
         XMLFields.setCdtrTwnNmField(cdtrTownField.getText());
         XMLFields.setRmtInfField(detailsField.getText());
-        XMLFields.setPurpCdField(detailsField.getText());
-        XMLFields.setCdtrBicField(dbtrBicField.getText());
-        XMLFields.setDbtrBicField(cdtrBicField.getText());
+        XMLFields.setCdtrBicField(cdtrBicField.getText());
+        XMLFields.setDbtrBicField(dbtrBicField.getText());
     }
 
 
     private void fillInFields(String templateName) {
-        BaseFunc bf = new BaseFunc();
         String xmlContent = DBConnection.getXmlTemplateByName(templateName);
         if (xmlContent != null) {
             String from = getValueFromTemplate(xmlContent, XPaths.XFromField);
@@ -268,14 +298,26 @@ public class ISOGenController implements Initializable {
             String cdtrBic = getValueFromTemplate(xmlContent, XPaths.XCdtrBicField);
             cdtrBicField.setText(cdtrBic);
 
-            String dbtrAcc = getValueFromTemplate(xmlContent, XPaths.XDbtrAcctField);
-            dbtrAcctField.setText(dbtrAcc);
+            String dbtrAcc;
+            if (!(dbtrAcc = getValueFromTemplate(xmlContent, XPaths.XDbtrAccIbanField))
+                    .isBlank()) {
+                dbtrAccField.setText(dbtrAcc);
+            } else if (!(dbtrAcc = getValueFromTemplate(xmlContent, XPaths.XDbtrAccOthField))
+                    .isBlank()) {
+                dbtrAccField.setText(dbtrAcc);
+            }
 
             String dbtrNm = getValueFromTemplate(xmlContent, XPaths.XDbtrNmField);
             dbtrNmField.setText(dbtrNm);
 
-            String cdtrAcc = getValueFromTemplate(xmlContent, XPaths.XCdtrAccField);
-            cdtrAccField.setText(cdtrAcc);
+            String cdtrAcc;
+            if (!(cdtrAcc = getValueFromTemplate(xmlContent, XPaths.XCdtrAccIbanField))
+                    .isBlank()) {
+                cdtrAccField.setText(cdtrAcc);
+            } else if (!(cdtrAcc = getValueFromTemplate(xmlContent, XPaths.XCdtrAccOthField))
+                    .isBlank()) {
+                cdtrAccField.setText(cdtrAcc);
+            }
 
             String cdtrNm = getValueFromTemplate(xmlContent, XPaths.XCdtrNmField);
             cdtrNmField.setText(cdtrNm);
@@ -300,9 +342,6 @@ public class ISOGenController implements Initializable {
 
             String details = getValueFromTemplate(xmlContent, XPaths.XRmtInfField);
             detailsField.setText(details);
-
-//            String purpCd = getValueFromTemplate(xmlContent, XPaths.XPurposeCode);
-//            detailsField.setText(purpCd);
         }
     }
 
@@ -325,66 +364,79 @@ public class ISOGenController implements Initializable {
     @FXML
     protected void onGenXmlButtonClick() {
         this.filePath = filePathField.getText();
+        if (filePath.isBlank()) {
+            bf.showCustomDialogMessage("Error", "Enter a path to save the new XML", genXML);
+            return;
+        }
         setupXmlObjectFromGui();
-        String generatedXml = xmlModifier.prepareXml(templateName);
 
-        XSDValidator xsdValidator = new XSDValidator();
-        if (true/*xsdValidator.validateXml(generatedXml)*/) {
-            fileGenerator.generateXmlFile(generatedXml, templateName, filePath);
+        if (this.templateName != null && !templateName.isBlank()) {
+            String generatedXml = xmlModifier.prepareXml(templateName);
 
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, "File is created!", ButtonType.OK);
-            alert.showAndWait();
+            XSDValidator xsdValidator = new XSDValidator();
+            if (!xsdValidator.validateXml(generatedXml)) {
+                bf.showCustomDialogMessage("Error", "XML validation failed.", messageSelector);
+                return;
+            }
+            fileGenerator.generateXmlFile(generatedXml, templateName, filePath, genXML);
+            showDoneLabel();
+        } else {
+            bf.showCustomDialogMessage("Error", "Select a template", genXML);
         }
     }
 
     @FXML
-    public void onSaveToBtnClick() {
+    private void onSaveToBtnClick() {
         DirectoryChooser directoryChooser = new DirectoryChooser();
         directoryChooser.setTitle("Save XML file to");
 
         directoryChooser.setInitialDirectory(new File(System.getProperty("user.home")));
         Stage stage = new Stage();
         File selectedDirectory = directoryChooser.showDialog(stage);
+
         if (selectedDirectory != null) {
             filePathField.setText(selectedDirectory.getPath());
         }
     }
 
     @FXML
-    void onNewTemplateBtnClick(ActionEvent event) {
+    private void onNewTemplateBtnClick(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select new template file.");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML", "*.xml"));
-
         Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
-
         File selectedFile = fileChooser.showOpenDialog(stage);
-
         XSDValidator xsdValidator = new XSDValidator();
 
         if (selectedFile != null) {
+            String fileName = selectedFile.getName();
+            int dot = fileName.lastIndexOf('.');
+            String newTemplateName = fileName.substring(0, dot);
+
             try {
-                String fileName = selectedFile.getName();
                 String xml = new String(Files.readAllBytes(Paths.get(selectedFile.getAbsolutePath())));
 
-
-                if (//xsdValidator.validateXml(xml) &&
-                        DBConnection.getXmlTemplateByName(fileName) == null) {
-
-                    DBConnection.saveNewTemplate(fileName, xml);
-                    refreshListOfTemplates();
-
-                    Alert alert = new Alert(Alert.AlertType.NONE, "New template added", ButtonType.OK);
-                    alert.show();
+                if (!xsdValidator.validateXml(xml)) {
+                    bf.showCustomDialogMessage("Error", "XML validation failed.", messageSelector);
+                } else if (!(DBConnection.getXmlTemplateByName(newTemplateName).isBlank())) {
+                    bf.showCustomDialogMessage("Error", "Template name already exists.", messageSelector);
                 } else {
-
-                    Alert alert = new Alert(Alert.AlertType.ERROR, "Try something else!", ButtonType.OK);
-                    alert.showAndWait();
+                    DBConnection.saveNewTemplate(newTemplateName, xml);
+                    refreshListOfTemplates();
+                    bf.showCustomDialogMessage("Info", "New template added", messageSelector);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        } else {
+            bf.showCustomDialogMessage("Error", "No path selected", messageSelector);
         }
     }
 
+    private void showDoneLabel() {
+        doneLbl.setVisible(true);
+        PauseTransition pauseTransition = new PauseTransition(Duration.seconds(2));
+        pauseTransition.setOnFinished(event -> doneLbl.setVisible(false));
+        pauseTransition.play();
+    }
 }

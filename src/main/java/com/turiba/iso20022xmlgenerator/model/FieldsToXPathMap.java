@@ -34,8 +34,9 @@ public class FieldsToXPathMap {
         modificationMap.put(XPaths.XUETRField, uuid.toString());
         modificationMap.put(XPaths.XInstgAgtField, XMLFields.instgAgtField);
         modificationMap.put(XPaths.XInstdAgtField, XMLFields.instdAgtField);
-        modificationMap.put(XPaths.XDbtrAcctField, XMLFields.dbtrAcctField);
-        modificationMap.put(XPaths.XDbtrNmField, XMLFields.cdtrNmField);
+        modificationMap.put(XPaths.XDbtrAccOthField, XMLFields.dbtrAccField);
+        modificationMap.put(XPaths.XDbtrAccIbanField, XMLFields.dbtrAccIbanField);
+        modificationMap.put(XPaths.XDbtrNmField, XMLFields.dbtrNmField);
         modificationMap.put(XPaths.XDbtrStrtNmField, XMLFields.dbtrStrtNmField);
         modificationMap.put(XPaths.XDbtrTwnNmField, XMLFields.dbtrTwnNmField);
         modificationMap.put(XPaths.XDbtrCtryField, XMLFields.dbtrCtryField);
@@ -45,11 +46,10 @@ public class FieldsToXPathMap {
         modificationMap.put(XPaths.XCdtrStrtNmField, XMLFields.cdtrStrtNmField);
         modificationMap.put(XPaths.XCdtrTwnNmField, XMLFields.cdtrTwnNmField);
         modificationMap.put(XPaths.XCdtrCtryField, XMLFields.cdtrCtryField);
-        modificationMap.put(XPaths.XCdtrAccField, XMLFields.cdtrAccField);
+        modificationMap.put(XPaths.XCdtrAccOthField, XMLFields.cdtrAccField);
+        modificationMap.put(XPaths.XCdtrAccIbanField, XMLFields.cdtrAccIbanField);
         modificationMap.put(XPaths.XRmtInfField, XMLFields.rmtInfField);
         modificationMap.put(XPaths.XDbtrBicField, XMLFields.dbtrBicField);
         modificationMap.put(XPaths.XCdtrBicField, XMLFields.cdtrBicField);
-        modificationMap.put(XPaths.XPurposeCode, XMLFields.purpCdField);
-
     }
 }

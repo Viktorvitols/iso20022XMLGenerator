@@ -1,6 +1,6 @@
 package com.turiba.iso20022xmlgenerator.database;
 
-import com.turiba.iso20022xmlgenerator.XSDValidator;
+import com.turiba.iso20022xmlgenerator.BaseFunc;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -11,22 +11,47 @@ public class DBConnection {
 
     public static Connection connect() {
         Connection conn = null;
+
         try {
             conn = DriverManager.getConnection(URL);
-            System.out.println("Connection to SQLite has been established.");
+            createTables(conn);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
         return conn;
     }
 
+    private static void createTables(Connection conn) {
+        String tableXML = "CREATE TABLE IF NOT EXISTS XMLTEMPLATE (\n" +
+                "    ID            INTEGER PRIMARY KEY AUTOINCREMENT\n" +
+                "                          NOT NULL,\n" +
+                "    MESSAGE_TYPE  TEXT    NOT NULL,\n" +
+                "    XML_TEMPLATE  TEXT    NOT NULL,\n" +
+                "    TEMPLATE_NAME TEXT    NOT NULL\n" +
+                ");";
+
+        String tableXSD = "CREATE TABLE IF NOT EXISTS XSDSCHEMA (\n" +
+                "    ID          INTEGER PRIMARY KEY AUTOINCREMENT\n" +
+                "                        NOT NULL,\n" +
+                "    FOR_MESSAGE TEXT    NOT NULL,\n" +
+                "    XSD_SCHEMA  TEXT    NOT NULL\n" +
+                ");";
+
+        try (Statement statement = conn.createStatement()){
+            statement.execute(tableXSD);
+            statement.execute(tableXML);
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static String getXmlTemplateByName(String templateName) {
         String sql = "SELECT XML_TEMPLATE from XMLTEMPLATE WHERE TEMPLATE_NAME = ?;";
+
         try (Connection conn = DriverManager.getConnection(URL);
              PreparedStatement statement = conn.prepareStatement(sql)) {
 
             statement.setString(1, templateName);
-
             try (ResultSet rs = statement.executeQuery()) {
                 if (rs.next()) {
                     return rs.getString("XML_TEMPLATE");
@@ -35,48 +60,33 @@ public class DBConnection {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return "";
     }
 
 
-    private static String getXsdForMesType(String mesType) {
-
+    public static String getXsdForMesType(String mesType) {
         String sql = "SELECT * from XSDSCHEMA WHERE FOR_MESSAGE = ?;";
 
         try (Connection conn = DriverManager.getConnection(URL);
              PreparedStatement statement = conn.prepareStatement(sql)) {
 
             statement.setString(1, mesType);
-
             try (ResultSet rs = statement.executeQuery()) {
 
                 if (rs.next()) {
                     return rs.getString("XSD_SCHEMA");
                 }
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public static String getAppHeaderXSD() {
-        return getXsdForMesType("head.001.001.02");
-    }
-
-    public static String getEnvelopeXSD() {
-        return getXsdForMesType("envelope");
-    }
-
-    public static String getDocumentXSD(String pacsType) {
-        return getXsdForMesType(pacsType);
-    }
-
     public static List<String> getTemplateNamesByFormat(String pacsFormat) {
         List<String> messageTypes = new ArrayList<>();
-
         String sql = "SELECT TEMPLATE_NAME FROM XMLTEMPLATE WHERE MESSAGE_TYPE = ?;";
+
         try (Connection conn = DriverManager.getConnection(URL);
              PreparedStatement statement = conn.prepareStatement(sql)) {
 
@@ -85,7 +95,6 @@ public class DBConnection {
             while (rs.next()) {
                 messageTypes.add(rs.getString("TEMPLATE_NAME"));
             }
-
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -94,9 +103,8 @@ public class DBConnection {
 
 
     public static void saveNewTemplate(String templateName, String message) {
-        XSDValidator xsdValidator = new XSDValidator();
-        String mesType = xsdValidator.getMessageFormat(message);
-
+        BaseFunc bf = new BaseFunc();
+        String mesType = bf.getMessageFormat(message);
         String sql = "INSERT INTO XMLTEMPLATE (TEMPLATE_NAME, XML_TEMPLATE, MESSAGE_TYPE)\n" +
                 "VALUES (?, ?, ?);";
 
@@ -112,8 +120,21 @@ public class DBConnection {
             statement.setString(3, mesType);
             statement.executeUpdate();
 
-        } catch (SQLException ex) {
-            throw new RuntimeException(ex);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static boolean deleteTemplate(String templateName) {
+        String sql = "DELETE FROM XMLTEMPLATE WHERE TEMPLATE_NAME = ?;";
+        try (Connection conn = DriverManager.getConnection(URL);
+             PreparedStatement statement = conn.prepareStatement(sql)) {
+
+            statement.setString(1, templateName);
+            return (statement.executeUpdate() > 0);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
         }
     }
 }

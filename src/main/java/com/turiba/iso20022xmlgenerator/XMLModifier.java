@@ -6,7 +6,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -30,6 +29,7 @@ public class XMLModifier {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         XPath xPath = XPathFactory.newInstance().newXPath();
         FieldsToXPathMap map = new FieldsToXPathMap();
+
         try {
             DocumentBuilder documentBuilder = factory.newDocumentBuilder();
             InputSource inputSource = new InputSource(new StringReader(template));
@@ -61,7 +61,7 @@ public class XMLModifier {
     private static String convertDocumentToString(Document doc) throws TransformerException {
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         Transformer transformer = transformerFactory.newTransformer();
-        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        transformer.setOutputProperty(OutputKeys.INDENT, "no");
         transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
 
         StringWriter writer = new StringWriter();

@@ -1,5 +1,7 @@
 package com.turiba.iso20022xmlgenerator;
 
+import javafx.scene.control.Control;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -10,9 +12,10 @@ public class FileGenerator {
 
     BaseFunc bf = new BaseFunc();
 
-    public void generateXmlFile(String xml, String templateName, String path) {
-        if ("".equals(path)) {
+    public void generateXmlFile(String xml, String templateName, String path, Control control) {
+        if ((path.isBlank())) {
             System.out.println("No path provided");
+            bf.showCustomDialogMessage("Error", "No path provided", control);
             return;
         }
         String fileName = templateName + "_" + bf.generateUniqueString() + ".xml";
@@ -28,12 +31,13 @@ public class FileGenerator {
                 throw new FileAlreadyExistsException("File already exists.");
             }
         } catch (FileAlreadyExistsException e) {
-            System.out.println("File already exists.");
+            bf.showCustomDialogMessage("Error", "File already exists", control);
+            e.printStackTrace();
+
         } catch (IOException e) {
-            System.out.println("An error occurred.");
+            bf.showCustomDialogMessage("Error", "Error generating XML.", control);
             e.printStackTrace();
         }
-
     }
 
     public void writeToFile(File xmlFile, String xml) {
@@ -41,9 +45,8 @@ public class FileGenerator {
             FileWriter writer = new FileWriter(xmlFile);
             writer.write(xml);
             writer.close();
-            System.out.println("File is created successfully.");
         } catch (IOException e) {
-            System.out.println("An error occurred.");
+            System.out.println("Write to file error.");
             e.printStackTrace();
         }
     }

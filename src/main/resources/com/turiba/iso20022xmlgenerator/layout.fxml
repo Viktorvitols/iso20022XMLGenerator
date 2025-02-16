@@ -41,7 +41,7 @@
             <TextField fx:id="dbtrBicField" alignment="CENTER" layoutX="134.0" layoutY="339.0" prefHeight="25.0" prefWidth="170.0" promptText="BICFIA1XXXX" style="-fx-background-color: #f2f2f3;" />
             <TextField fx:id="cdtrBicField" alignment="CENTER" layoutX="319.0" layoutY="339.0" prefHeight="25.0" prefWidth="170.0" promptText="BICFIA1XXXX" style="-fx-background-color: #f2f2f3;" />
             <TextField fx:id="dbtrNmField" layoutX="134.0" layoutY="379.0" prefHeight="25.0" prefWidth="355.0" promptText="Debitor Name" style="-fx-background-color: #f2f2f3;" />
-            <TextField fx:id="dbtrAcctField" layoutX="134.0" layoutY="415.0" prefHeight="25.0" prefWidth="170.0" promptText="LV00RTMB0000000000000" style="-fx-background-color: #f2f2f3;" />
+            <TextField fx:id="dbtrAccField" layoutX="134.0" layoutY="415.0" prefHeight="25.0" prefWidth="170.0" promptText="LV00RTMB0000000000000" style="-fx-background-color: #f2f2f3;" />
             <TextField fx:id="cdtrAccField" alignment="CENTER_RIGHT" layoutX="319.0" layoutY="415.0" prefHeight="25.0" prefWidth="170.0" promptText="LV00RTMB0000000000000" style="-fx-background-color: #f2f2f3;" />
             <TextField fx:id="cdtrNmField" alignment="CENTER_RIGHT" layoutX="134.0" layoutY="449.0" prefHeight="25.0" prefWidth="355.0" promptText="Creditor Name" style="-fx-background-color: #f2f2f3;" />
             <TextField fx:id="dbtrStrField" layoutX="134.0" layoutY="484.0" prefHeight="25.0" prefWidth="355.0" promptText="Debitor address" style="-fx-background-color: #f2f2f3;" />
@@ -172,6 +172,11 @@
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
+            </Label>
+            <Label fx:id="doneLbl" layoutX="387.0" layoutY="831.0" prefHeight="39.0" prefWidth="101.0" text="Done!" textFill="#28a745" visible="false">
+               <font>
+                  <Font name="Calibri Bold" size="18.0" />
+               </font>
             </Label>
          </children>
       </AnchorPane>

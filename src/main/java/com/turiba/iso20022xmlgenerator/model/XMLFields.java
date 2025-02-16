@@ -9,7 +9,8 @@ public class XMLFields {
     public static String intrBkSttlmDtField;
     public static String instdAgtField;
     public static String instgAgtField;
-    public static String dbtrAcctField;
+    public static String dbtrAccField;
+    public static String dbtrAccIbanField;
     public static String dbtrNmField;
     public static String dbtrStrtNmField;
     public static String dbtrTwnNmField;
@@ -21,11 +22,10 @@ public class XMLFields {
     public static String cdtrTwnNmField;
     public static String cdtrCtryField;
     public static String cdtrAccField;
+    public static String cdtrAccIbanField;
     public static String rmtInfField;
-
     public static String cdtrBicField;
     public static String dbtrBicField;
-    public static String purpCdField;
 
     public static void setFromField(String fromField) {
         XMLFields.fromField = fromField.toUpperCase();
@@ -59,8 +59,8 @@ public class XMLFields {
         XMLFields.instgAgtField = instgAgtField.toUpperCase();
     }
 
-    public static void setDbtrAcctField(String dbtrAcctField) {
-        XMLFields.dbtrAcctField = dbtrAcctField.toUpperCase();
+    public static void setDbtrAccField(String dbtrAccField) {
+        XMLFields.dbtrAccField = dbtrAccField.toUpperCase();
     }
 
     public static void setDbtrNmField(String dbtrNmField) {
@@ -107,11 +107,16 @@ public class XMLFields {
         XMLFields.cdtrAccField = cdtrAccField.toUpperCase();
     }
 
+    public static void setDbtrAccIbanField(String dbtrAccIbanField) {
+        XMLFields.dbtrAccIbanField = dbtrAccIbanField;
+    }
+
+    public static void setCdtrAccIbanField(String cdtrAccIbanField) {
+        XMLFields.cdtrAccIbanField = cdtrAccIbanField;
+    }
+
     public static void setRmtInfField(String details) {
         XMLFields.rmtInfField = details.trim();
-    }
-    public static void setPurpCdField(String details) {
-        XMLFields.purpCdField = details.trim();
     }
 
     public static void setCdtrBicField(String cdtrBicField) {

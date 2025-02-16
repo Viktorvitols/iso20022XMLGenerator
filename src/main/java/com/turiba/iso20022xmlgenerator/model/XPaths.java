@@ -15,7 +15,8 @@ public class XPaths {
     public static final String XIntrBkSttlmDtField = "//CdtTrfTxInf/IntrBkSttlmDt";
     public static final String XInstgAgtField = "//CdtTrfTxInf/InstgAgt/FinInstnId/BICFI";
     public static final String XInstdAgtField = "//CdtTrfTxInf/InstdAgt/FinInstnId/BICFI";
-    public static final String XDbtrAcctField = "//CdtTrfTxInf/DbtrAcct/Id/Othr/Id";
+    public static final String XDbtrAccOthField = "//CdtTrfTxInf/DbtrAcct/Id/Othr/Id";
+    public static final String XDbtrAccIbanField = "//CdtTrfTxInf/DbtrAcct/Id/IBAN";
     public static final String XDbtrNmField = "//CdtTrfTxInf/Dbtr/Nm";
     public static final String XDbtrStrtNmField = "//CdtTrfTxInf/Dbtr/PstlAdr/StrtNm";
     public static final String XDbtrTwnNmField = "//CdtTrfTxInf/Dbtr/PstlAdr/TwnNm";
@@ -26,11 +27,9 @@ public class XPaths {
     public static final String XCdtrStrtNmField = "//CdtTrfTxInf/Cdtr/PstlAdr/StrtNm";
     public static final String XCdtrTwnNmField = "//CdtTrfTxInf/Cdtr/PstlAdr/TwnNm";
     public static final String XCdtrCtryField = "//CdtTrfTxInf/Cdtr/PstlAdr/Ctry";
-    public static final String XCdtrAccField = "//CdtTrfTxInf/CdtrAcct/Id/Othr/Id";
+    public static final String XCdtrAccOthField = "//CdtTrfTxInf/CdtrAcct/Id/Othr/Id";
+    public static final String XCdtrAccIbanField = "//CdtTrfTxInf/CdtrAcct/Id/IBAN";
     public static final String XRmtInfField = "//CdtTrfTxInf/RmtInf/Ustrd";
-
     public static final String XDbtrBicField = "//CdtTrfTxInf/Dbtr/FinInstnId/BICFI";
     public static final String XCdtrBicField = "//CdtTrfTxInf/Cdtr/FinInstnId/BICFI";
-    public static final String XPurposeCode = "//CdtTrfTxInf/Purp/Cd";
-
 }

@@ -5,6 +5,7 @@ target/
 mvnw
 mvnw.cmd
 pom.xml
+/ISOGenDB/ISOGenDB.db
 
 ### IntelliJ IDEA ###
 .idea
