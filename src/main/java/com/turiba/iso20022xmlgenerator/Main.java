@@ -8,12 +8,10 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-import static com.turiba.iso20022xmlgenerator.database.DBConnection.*;
-
 public class Main extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("layout.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/com/turiba/iso20022xmlgenerator/layout.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 660, 925);
         stage.setTitle("ISOGen 1.0");
         Image icon = new Image("iso.png");
@@ -24,7 +22,6 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
-        connect();
         launch();
     }
 }
